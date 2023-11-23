@@ -17,7 +17,10 @@
     - Array of nested documents created with the reactionSchema
 
   Schema's
-    - create a virtual call friendCount that retrieves the length of the user's friends array field on query
+    - Create a virtual called `reactionCount` that retrieves the length of the thought's `reactions` array field on query.
+
+
+
     - Reation (Schema Only - this will not be a model, but rather be used as the reaction field's subdocument schema in the Thought model)
         + reationId
             - Use Monngoose's ObjectId data type
@@ -37,12 +40,16 @@
 const mongoose = require('mongoose');
 
 const thoughtSchema = new mongoose.Schema(
-  
+  {
+    thoughtText: {
+      type: String,
+      required: true,
+      min: [1, "min of 1 character needed"],
+      max: [280, "Max of 280 characters allowed"]
+    },
+    createdAt: { type: Date, default: Date.now }
+  }
 )
-
-
-
-
 
 
 const Thought = mongoose.model('Thought', thoughtSchema)
