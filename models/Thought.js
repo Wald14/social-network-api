@@ -52,9 +52,9 @@ const reactionSchema = new mongoose.Schema(
       min: [1, "min of 1 character needed"],
       max: [280, 'Max of 280 characters']
     },
-    // username: {
-    //   type: String,
-    //   required: true,
+    // userId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'User',
     // },
     createdAt: { type: Date, default: Date.now },
   },
@@ -76,10 +76,10 @@ const thoughtSchema = new mongoose.Schema(
       max: [280, "Max of 280 characters allowed"]
     },
     createdAt: { type: Date, default: Date.now },
-    // username: {
-    //   type: String,
-    //   required: true,
-    // },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
     reactions: [reactionSchema]
   },
   {

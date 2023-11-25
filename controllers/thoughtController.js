@@ -32,7 +32,11 @@ module.exports = {
   // Get all thoughts
   async getAllThoughts(req, res) {
     try {
-      const payload = await Thought.find();
+      const payload = await Thought
+        .find()
+        .populate({path: 'userId'})
+        .select('-__v')
+      ;
       res.json({status: 'success', payload})
     } catch (err) {
       res.status(500).json({status: 'error', payload: err.message});
@@ -94,7 +98,14 @@ module.exports = {
     try {
       const payload = await Thought.findOneAndDelete({ _id: req.params.id }
       );
-      res.json(payload)
+
+      const user = await User.findOneAndUpdate(
+        { _id: payload.userId },
+        { $addToSet: { reactions: req.params.id } },
+        { runValidators: true, new: true }
+      )
+
+      res.json(`${user.username}'s following thought has been deleted: ${payload.thoughtText}`)
     } catch (err) {
       res.status(500).json({status: 'error', payload: err.message});
     }
@@ -125,9 +136,6 @@ module.exports = {
   // Delete a Reaction from a Thought
   async deleteReaction(req, res) {
     try {
-      console.log(req.params.id)
-      console.log(req.body.reactionId)
-
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.id },
         { $pull: { reactions: {_id: req.body.reactionId} } },

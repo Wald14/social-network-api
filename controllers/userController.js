@@ -107,18 +107,6 @@ module.exports = {
     }
   },
 
-  // async deleteUser(req, res) {
-  //   try {
-  //     const payload = await User.findOneAndDelete({ _id: req.params.id }
-  //     );
-  //     // res.json(payload)
-  //     res.json(`The user ${payload.username} has been deleted from the database`)
-  //   } catch (err) {
-  //     res.status(500).json({status: 'error', payload: err.message});
-  //   }
-  // },
-
-
   // Add a friend to User
   async addFriend(req, res) {
     try {
