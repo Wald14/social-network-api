@@ -19,6 +19,8 @@ When the user tests API POST, PUT, and DELETE routes in Insomina, then they are 
 
 When the user tests API POST and DELETE routes in Insomina, then they are able to successfully create and delete reactions to thoughts and add and remove friends to a user's friend list.
 
+When the user does delete a user from the database, that user's associated thoughts are also deleted.
+
 A demo of these can be found in the video below.
 
 ## Questions
