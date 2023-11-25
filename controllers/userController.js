@@ -24,7 +24,7 @@
 /*
   /api/users/:userId/friends/:friendId
 
-  POST to add a new friend to a suer's friend list
+  POST to add a new friend to a user's friend list
 
   DELETE to remove a friend from a user's friend list
 */
@@ -35,7 +35,9 @@ module.exports = {
   // Get all users
   async getAllUsers(req, res) {
     try {
-      const payload = await User.find();
+      const payload = await User
+        .find()
+        .select('-__v');
       res.json({status: 'success', payload})
     } catch (err) {
       res.status(500).json({status: 'error', payload: err.message});
@@ -45,7 +47,10 @@ module.exports = {
   // Get single user
   async getSingleUser(req, res) {
     try {
-      const payload = await User.findOne({ _id: req.params.id });
+      const payload = await User
+        .findOne({ _id: req.params.id })
+        .populate({ path: 'thoughts' })
+        .select('-__v');
       res.json(payload)
     } catch (err) {
       res.status(500).json({status: 'error', payload: err.message});
@@ -81,10 +86,12 @@ module.exports = {
     try {
       const payload = await User.findOneAndDelete({ _id: req.params.id }
       );
-      res.json(payload)
+      // res.json(payload)
+      res.json(`The user ${payload.username} has been deleted from the database`)
     } catch (err) {
       res.status(500).json({status: 'error', payload: err.message});
     }
   },
+
 
 }

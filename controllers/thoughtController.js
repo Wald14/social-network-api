@@ -42,7 +42,10 @@ module.exports = {
   // Get single thought
   async getSingleThought(req, res) {
     try {
-      const payload = await Thought.findOne({ _id: req.params.id });
+      const payload = await Thought
+        .findOne({ _id: req.params.id })
+        .populate({ path: 'user', model: "User" })
+        .select("-__v");
       res.json(payload)
     } catch (err) {
       res.status(500).json({status: 'error', payload: err.message});
@@ -53,7 +56,20 @@ module.exports = {
   async createThought(req, res) {
     try {
       const payload = await Thought.create(req.body);
-      res.json(payload)
+      const user = await User.findOneAndUpdate(
+        { _id: req.body.userId },
+        { $addToSet: { thoughts: payload._id } },
+        { runValidators: true, new: true }
+      )
+
+      if (!user) {
+        return res.status(404).json({
+          message: 'Thought creation aborted, no user with that ID found',
+        });
+      } else {
+        res.json(payload)
+      }
+
     } catch (err) {
       res.status(500).json({status: 'error', payload: err.message});
     }
