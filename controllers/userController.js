@@ -116,7 +116,7 @@ module.exports = {
     }
   },
 
-  // Delete a friend to User
+  // Delete a Friend from a User
   async deleteFriend(req, res) {
     try {
       const user = await User.findOneAndUpdate(
