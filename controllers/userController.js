@@ -84,6 +84,20 @@ module.exports = {
   // Delete a user
   async deleteUser(req, res) {
     try {
+      const userInfo = await User
+        .findOne({ _id: req.params.id })
+        .populate({ path: 'thoughts' })
+        .select('-__v');
+
+      userInfo.thoughts.forEach(async (thought) => {
+        try {
+          const payload = await Thought.findOneAndDelete({ _id: thought }
+          );
+        } catch (err) {
+          res.status(500).json({status: 'error', payload: err.message});
+        }
+      })
+
       const payload = await User.findOneAndDelete({ _id: req.params.id }
       );
       // res.json(payload)
@@ -92,6 +106,17 @@ module.exports = {
       res.status(500).json({status: 'error', payload: err.message});
     }
   },
+
+  // async deleteUser(req, res) {
+  //   try {
+  //     const payload = await User.findOneAndDelete({ _id: req.params.id }
+  //     );
+  //     // res.json(payload)
+  //     res.json(`The user ${payload.username} has been deleted from the database`)
+  //   } catch (err) {
+  //     res.status(500).json({status: 'error', payload: err.message});
+  //   }
+  // },
 
 
   // Add a friend to User
